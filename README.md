@@ -5,10 +5,18 @@ This driver as a part of the bachelor project "Recreating Operator Paths Using a
 
 
 # How to install
-!!!Write this later!!
 
 - Update rules to allow to run as non root
-- Change Viper settings in viper_settings.launch
+
+# How to change the Viper settings
+Change Viper settings in the 'launch/viper_settings.launch' file. The following settings are implemented to be changed in the launch file. 
+- Hemisphere
+- FTT mode
+- Position units
+- Orientation units
+- Sensor filter level
+
+The rest of the settings are default.
 
 
 
