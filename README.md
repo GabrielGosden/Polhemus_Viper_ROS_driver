@@ -9,7 +9,7 @@ This driver as a part of the bachelor project "Recreating Operator Paths Using a
 - Update rules to allow to run as non root
 
 # How to change the Viper settings
-Change Viper settings in the `launch/viper_settings.launch` file. The following settings are implemented to be changed in the launch file. 
+Change Viper settings in the `launch/viper_settings.launch` file. The following settings are implemented to be changed using the launch file. 
 - Hemisphere
 - FTT mode
 - Position units
