@@ -210,6 +210,9 @@ include_directories(
 
 
 add_executable(Viper_broadcaster src/Viper_broadcaster.cpp)
+add_executable(kalman_filter src/kalman_filter.cpp)
+add_executable(path_generation src/path_generation.cpp)
+
 add_library(
 USBfcns
   src/USBfcns.cpp
@@ -223,5 +226,18 @@ VNCP
 
 )
 
+add_library(
+  Kalman
+  src/kalman_functions.cpp
+  src/kalman_functions.h
+)
+add_library(
+  Path_functions
+  src/path_generation_functions.cpp
+  src/path_generation_functions.h
+)
+
+
 target_link_libraries(Viper_broadcaster ${catkin_LIBRARIES} USBfcns VNCP usb-1.0)
-#add_dependencies(talker beginner_tutorials_generate_messages_cpp)
+target_link_libraries(kalman_filter ${catkin_LIBRARIES} Kalman)
+target_link_libraries(path_generation ${catkin_LIBRARIES} Path_functions)
