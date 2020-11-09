@@ -32,12 +32,7 @@ void kalman_filter_pose_ori_callback(const viper_tf2_broadcaster::viper_msg_pose
     az = msg.az;
     el = msg.el;
     ro = msg.ro;
-
-	//
-	//y = y_temp;
-	//x = x_temp;
-	//x = y_temp;
-	//y = x_temp;
+	
 	z = z*(-1);
 	az = az*(-1);
 }
