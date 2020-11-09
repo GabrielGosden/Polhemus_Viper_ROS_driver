@@ -101,6 +101,7 @@ int main(int argc, char **argv)
 		}
 	}else{	
 		ROS_INFO("Position NOT sent, out of bounds!");
+		//asd
 	}
 	
 	ros::spinOnce();
