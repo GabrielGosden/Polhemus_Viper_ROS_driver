@@ -1,4 +1,13 @@
 
+/*-------------------------------------------------------------------------------------------------*/
+/*																								   */
+/* This file is created by Gabriel Gosden. 													   	   */
+/* Email: s174865@student.dtu.dk as a part of the bachelor project:								   */
+/* "Recreating Operator Paths Using an Electromagnetic Motion Tracker and a Robot Manipulator.	   */
+/* This work has been done for Teknologisk Institut, DMRI.										   */
+/*																								   */
+/*-------------------------------------------------------------------------------------------------*/
+
 #include "std_msgs/String.h"
 #include "VPif3.h"
 #include "USBfcns.h"
@@ -72,7 +81,7 @@ int main(int argc, char **argv)
 	n.getParam("/y_hs", y_hs);
 	n.getParam("/z_hs", z_hs);
 	float hemarr[3] = { x_hs, y_hs, z_hs};
-	hemcfg.Fill(hemarr, true);
+	hemcfg.Fill(hemarr, false);
 	
 		if (CmdHemisphere(hemcfg))
 		{
@@ -138,7 +147,6 @@ int main(int argc, char **argv)
 	{
 		
 		viper_tf2_broadcaster :: viper_msg_pose_ori msg_pose_ori;
-		//viper_tf2_broadcaster :: viper_msg_ori msg_ori;
 		viper_tf2_broadcaster :: viper_msg_n msg_n;
 		viper_tf2_broadcaster :: viper_msg_dist msg_dist;
 		CVPcmd cmd;
@@ -180,7 +188,6 @@ int main(int argc, char **argv)
 						msg_n.n = n_out;
 
 						viper_broadcaster_pose_ori_pub.publish(msg_pose_ori);
-						//viper_broadcaster_ori_pub.publish(msg_ori);
 						viper_broadcaster_dist_pub.publish(msg_dist);
 						viper_broadcaster_n_pub.publish(msg_n);
 					}

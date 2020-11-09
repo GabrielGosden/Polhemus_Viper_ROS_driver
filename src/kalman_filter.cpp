@@ -1,3 +1,12 @@
+/*-------------------------------------------------------------------------------------------------*/
+/*																								   */
+/* This file is created by Gabriel Gosden. 													   	   */
+/* Email: s174865@student.dtu.dk as a part of the bachelor project:								   */
+/* "Recreating Operator Paths Using an Electromagnetic Motion Tracker and a Robot Manipulator.	   */
+/* This work has been done for Teknologisk Institut, DMRI.										   */
+/*																								   */
+/*-------------------------------------------------------------------------------------------------*/
+
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "viper_tf2_broadcaster/viper_msg_pose_ori.h"
