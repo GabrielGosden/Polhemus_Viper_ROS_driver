@@ -32,7 +32,7 @@ void kalman_filter_pose_ori_callback(const viper_tf2_broadcaster::viper_msg_pose
     az = msg.az;
     el = msg.el;
     ro = msg.ro;
-	
+
 	z = z*(-1);
 	az = az*(-1);
 }
@@ -40,7 +40,6 @@ void kalman_filter_pose_ori_callback(const viper_tf2_broadcaster::viper_msg_pose
 void viper_broadcaster_n_callback(const viper_tf2_broadcaster::viper_msg_n  &msg)
 {
    sample_number = msg.n;
-   
 }
 
 // Callback function for viper_broadcaster_dist_sub
@@ -79,38 +78,31 @@ int main(int argc, char **argv)
 
     while (ros::ok())
   {
-	
-
-	//ROS_INFO("x = %f, y = %f, z = %f",y,x,z);
 	// String for servoj command
 	std_msgs::String msg;
 	std::stringstream ss;
-	//temp = x;
-	//x = y;
-	//y = temp;
+
 	// Fill string with position data and apply rotation matrix (Rot(x,pi)*Rot(z,pi/2))
-	//ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z*(-1) << ",3.72,-0.3,-0.12]), t=0.08, lookahead_time=0.001, gain=100)";
 	//ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az <<"]), t=0.08, lookahead_time=0.001, gain=100)";
 	ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az <<"]), t=0.5, lookahead_time=0.001, gain=100)";
+	
+	// Put generated string into message
 	msg.data = ss.str();
 
 	
-
-
 	// Safety for testing
 	ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",y,x,z,az,el,ro);
-		if ( y > -0.5 && y < 0.6){ 		// Robot frame x lim
-			if( x > 0 && x < 0.9){ 		// Robot frame y lim
-				ur_script_pub.publish(msg);
-				//ROS_INFO("Position sent!");
-			}
+
+
+	// If statements for limits.
+	if ( y > -0.5 && y < 0.6){ 		// Robot frame x lim
+		if( x > 0 && x < 0.9){ 		// Robot frame y lim
+			ur_script_pub.publish(msg);
+		}
 	}else{	
-		//ROS_INFO("Position NOT sent, out of bounds!");
+		ROS_INFO("Position NOT sent, out of bounds!");
 	}
 	
-	
-		
-
 	ros::spinOnce();
 
 	loop_rate.sleep();
