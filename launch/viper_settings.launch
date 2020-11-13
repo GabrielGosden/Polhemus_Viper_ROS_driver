@@ -1,10 +1,5 @@
 <launch>
 
-    <node name = "viper_broadcaster" pkg = "viper_tf2_broadcaster" type = "Viper_broadcaster" output = "screen"/>
-    <node name = "kalman_filter" pkg = "viper_tf2_broadcaster" type = "kalman_filter" output = "screen"/>
-    <node name = "path_generation" pkg = "viper_tf2_broadcaster" type = "path_generation" output = "screen"/>
-
-
     <!-- Set hemisphere parameters (This is positive x)-->
     <param name = "x_hs" value = "1" type = "double"/>
     <param name = "y_hs" value = "0" type = "double"/>

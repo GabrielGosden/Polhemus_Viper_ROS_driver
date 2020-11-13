@@ -1,0 +1,10 @@
+<launch>
+    <include file ="$(find viper_tf2_broadcaster)/launch/viper_sensor_startup_limit.launch" />
+    <include file ="$(find viper_tf2_broadcaster)/launch/viper_settings.launch" />
+
+
+    <node name = "viper_broadcaster" pkg = "viper_tf2_broadcaster" type = "Viper_broadcaster" output = "screen"/>
+    <node name = "kalman_filter" pkg = "viper_tf2_broadcaster" type = "kalman_filter" output = "screen"/>
+    <node name = "path_generation" pkg = "viper_tf2_broadcaster" type = "path_generation" output = "screen"/>                  
+
+</launch>

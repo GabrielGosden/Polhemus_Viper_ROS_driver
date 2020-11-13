@@ -1,0 +1,49 @@
+<launch>
+    <!--________________________________________________________ -->
+    <!-- These are in relation to the robot base frame in meters -->
+    <!--________________________________________________________ -->
+    <!-- Sensor safe starting position x_max limit -->
+    <param name = "robot_x_max" value = "0.025" type = "double"/>     
+    
+    <!-- Robot safe starting position x_min limit -->
+    <param name = "robot_x_min" value = "-0.025" type = "double"/>                      
+
+    <!-- Robot safe starting position y_max limit -->
+    <param name = "robot_y_max" value = "0.55" type = "double"/>     
+    
+    <!-- Robot safe starting position y_min limit -->
+    <param name = "robot_y_min" value = "0.5" type = "double"/>       
+
+    <!-- Robot safe starting position z_max limit -->
+    <param name = "robot_z_max" value = "0.65" type = "double"/>     
+    
+    <!-- Robot safe starting position z_min limit -->
+    <param name = "robot_z_min" value = "0.6" type = "double"/>                      
+    
+
+
+    <!--_________________________________________________________ -->
+    <!-- These are in relation to the robot base frame in radians -->
+    <!--_________________________________________________________ -->
+
+
+    <!-- Robot safe starting orientation az_max limit -->
+    <param name = "robot_az_max" value = "0.78" type = "double"/>    
+
+     <!-- Robot safe starting orientation az_min limit -->
+    <param name = "robot_az_min" value = "-0.78" type = "double"/>       
+
+    <!-- Robot safe starting orientation el_max limit -->
+    <param name = "robot_el_max" value = "0.78" type = "double"/>    
+
+    <!-- Robot safe starting orientation el_min limit -->
+    <param name = "robot_el_min" value = "-0.78" type = "double"/>  
+
+    <!-- Robot safe starting orientation ro_max limit -->
+    <param name = "robot_ro_max" value = "0.78" type = "double"/>    
+
+    <!-- Robot safe starting orientation ro_min limit -->
+    <param name = "robot_ro_min" value = "-0.78" type = "double"/>            
+
+
+</launch>
