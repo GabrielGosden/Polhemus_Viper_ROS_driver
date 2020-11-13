@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>Polhemus_Viper_ROS_Driver</name>
+  <version>0.0.1</version>
+  <description>Polhemus_Viper_ROS_Driver package</description>
+
+
+  <maintainer email="s174865@student.dtu.dk">Gabriel Gosden</maintainer>
+  <license>BSD</license>
+
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>tf2</build_export_depend>
+  <build_export_depend>tf2_ros</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>message_runtime</exec_depend> -->
+  
+  
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

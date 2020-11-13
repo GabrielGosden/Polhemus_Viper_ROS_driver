@@ -1,0 +1,49 @@
+<launch>
+    <!--________________________________________________________ -->
+    <!-- These are in relation to the robot base frame in meters -->
+    <!--________________________________________________________ -->
+
+    <!-- Sensor safe starting position x_max limit -->
+    <param name = "sensor_x_max" value = "0.025" type = "double"/>     
+    
+    <!-- Sensor safe starting position x_min limit -->
+    <param name = "sensor_x_min" value = "-0.025" type = "double"/>                      
+
+    <!-- Sensor safe starting position y_max limit -->
+    <param name = "sensor_y_max" value = "0.55" type = "double"/>     
+    
+    <!-- Sensor safe starting position y_min limit -->
+    <param name = "sensor_y_min" value = "0.5" type = "double"/>       
+
+    <!-- Sensor safe starting position z_max limit -->
+    <param name = "sensor_z_max" value = "0.65" type = "double"/>     
+    
+    <!-- Sensor safe starting position z_min limit -->
+    <param name = "sensor_z_min" value = "0.6" type = "double"/>                      
+    
+
+
+    <!--________________________________________________________ -->
+    <!-- These are in relation to the robot base frame in radians -->
+    <!--________________________________________________________ -->
+
+    <!-- Sensor safe starting orientation az_max limit -->
+    <param name = "sensor_az_max" value = "0.78" type = "double"/>    
+
+     <!-- Sensor safe starting orientation az_min limit -->
+    <param name = "sensor_az_min" value = "-0.78" type = "double"/>       
+
+    <!-- Sensor safe starting orientation el_max limit -->
+    <param name = "sensor_el_max" value = "0.78" type = "double"/>    
+
+    <!-- Sensor safe starting orientation el_min limit -->
+    <param name = "sensor_el_min" value = "-0.78" type = "double"/>  
+
+    <!-- Sensor safe starting orientation ro_max limit -->
+    <param name = "sensor_ro_max" value = "0.78" type = "double"/>    
+
+    <!-- Sensor safe starting orientation ro_min limit -->
+    <param name = "sensor_ro_min" value = "-0.78" type = "double"/>            
+
+
+</launch>

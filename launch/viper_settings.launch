@@ -1,0 +1,41 @@
+<launch>
+
+    <!-- Set hemisphere parameters (This is positive x)-->
+    <param name = "x_hs" value = "1" type = "double"/>
+    <param name = "y_hs" value = "0" type = "double"/>
+    <param name = "z_hs" value = "0" type = "double"/>
+
+    <!-- Set position units-->
+    <!--<param name = "pos_unit" value = "0" type = "int"/>-->                      <!-- Inches                         -->
+    <!--<param name = "pos_unit" value = "1" type = "int"/>-->                      <!-- Foot                           -->
+    <param name = "pos_unit" value = "2" type = "int"/>                             <!-- Centimeters                    -->
+    <!--<param name = "pos_unit" value = "3" type = "int"/>-->                      <!-- Meters                         -->
+
+    <!-- Set orientation units-->
+    <!--<param name = "ori_unit" value = "0" type = "int"/>-->                      <!-- Euler angles in degrees        -->
+    <param name = "ori_unit" value = "1" type = "int"/>                             <!-- Euler angles in radians        -->
+    <!--<param name = "ori_unit" value = "2" type = "int"/>-->                      <!-- Quaternions                    -->
+
+    <!-- Set sensor filter-->
+    <!--<param name = "filter_level" value = "0" type = "int"/>-->                  <!-- No filtering                   -->
+    <!--<param name = "filter_level" value = "1" type = "int"/>-->                  <!-- Traditional light filtering    -->
+    <!--<param name = "filter_level" value = "2" type = "int"/>-->                  <!-- Traditional medium filtering   -->
+    <!--<param name = "filter_level" value = "3" type = "int"/>-->                  <!-- Traditional heavy filtering    -->
+    <!--<param name = "filter_level" value = "4" type = "int"/>-->                  <!-- Traditional custom filtering   -->
+    <!--<param name = "filter_level" value = "5" type = "int"/>-->                  <!-- Enhanced light filtering       -->
+    <!--<param name = "filter_level" value = "6" type = "int"/>-->                  <!-- Enhanced medium filtering      -->
+    <param name = "filter_level" value = "7" type = "int"/>                         <!-- Enhanced heavy filtering       -->
+    <!--<param name = "filter_level" value = "8" type = "int"/>-->                  <!-- Reserved                       -->
+
+    <!-- Set FTT -->
+    <!--<param name = "ftt_mode" value = "0" type = "int"/>-->                      <!-- FTT disabled                   -->         
+    <param name = "ftt_mode" value = "1" type = "int"/>                             <!-- FTT stationary Source Mode     --> 
+    <!--<param name = "ftt_mode" value = "2" type = "int"/>-->                      <!-- FTT Moving Source Mode         --> 
+
+    <!-- Set ROS Viper sample time -->
+    <param name = "viper_sample_time" value = "240" type = "int"/>                  
+
+    <!-- Set path generation sample time -->
+    <param name = "path_sample_time" value = "50" type = "int"/>                      
+
+</launch>
