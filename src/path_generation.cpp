@@ -10,9 +10,9 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 // Include the custom messages.
-#include "Polhemus_Viper_ROS_Driver/viper_msg_pose_ori.h"
-#include "Polhemus_Viper_ROS_Driver/viper_msg_n.h"
-#include "Polhemus_Viper_ROS_Driver/viper_msg_dist.h"
+#include <Polhemus_Viper_ROS_Driver/viper_msg_pose_ori.h>
+#include <Polhemus_Viper_ROS_Driver/viper_msg_n.h>
+#include <Polhemus_Viper_ROS_Driver/viper_msg_dist.h>
 
 
 
