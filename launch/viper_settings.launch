@@ -32,10 +32,12 @@
     <param name = "ftt_mode" value = "1" type = "int"/>                             <!-- FTT stationary Source Mode     --> 
     <!--<param name = "ftt_mode" value = "2" type = "int"/>-->                      <!-- FTT Moving Source Mode         --> 
 
+
+
+    <!-- These two settings must result in modulus 0 when divided. -->
     <!-- Set ROS Viper sample time -->
     <param name = "viper_sample_time" value = "240" type = "int"/>                  
-
     <!-- Set path generation sample time -->
-    <param name = "path_sample_time" value = "50" type = "int"/>                      
+    <param name = "path_sample_time" value = "40" type = "int"/>                      
 
 </launch>

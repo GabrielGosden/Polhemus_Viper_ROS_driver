@@ -30,9 +30,8 @@ int main(int argc, char **argv)
 	/*-------------------------------------*/
 	/* Variables for viper_settings.launch */
 	float x_hs, y_hs, z_hs;
-	int pos_unit, ori_unit;
-	int filter_level;
-	int FTT_mode;
+	int pos_unit, ori_unit, filter_level, FTT_mode, viper_sample_time;
+
 	/*-------------------------------------*/
 
 	ros::init(argc, argv, "viper_broadcaster");
@@ -44,8 +43,9 @@ int main(int argc, char **argv)
 	ros::Publisher viper_broadcaster_pose_ori_pub= n.advertise<Polhemus_Viper_ROS_Driver::viper_msg_pose_ori>("viper_broadcaster_pose_ori", 1000);
 	ros::Publisher viper_broadcaster_n_pub= n.advertise<Polhemus_Viper_ROS_Driver::viper_msg_n>("viper_broadcaster_n", 1000);
 	ros::Publisher viper_broadcaster_dist_pub= n.advertise<Polhemus_Viper_ROS_Driver::viper_msg_dist>("viper_broadcaster_dist", 1000);
- 
-	ros::Rate loop_rate(240);
+	
+	n.getParam("/viper_sample_time", viper_sample_time);
+	ros::Rate loop_rate(viper_sample_time);
 		
 	/*Discover open and claim Polemus Viper*/
 	if (DiscoverVidPid(&g_usbhnd, g_usbinfo, POLHEMUS_USB_VID, VIPER_USB_PID)!=0)

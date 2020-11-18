@@ -9,10 +9,10 @@
     <param name = "robot_x_min" value = "-0.5" type = "double"/>                      
 
     <!-- Robot safe starting position y_max limit -->
-    <param name = "robot_y_max" value = "0.5" type = "double"/>     
+    <param name = "robot_y_max" value = "1.5" type = "double"/>     
     
     <!-- Robot safe starting position y_min limit -->
-    <param name = "robot_y_min" value = "-0.5" type = "double"/>       
+    <param name = "robot_y_min" value = "0" type = "double"/>       
 
     <!-- Robot safe starting position z_max limit -->
     <param name = "robot_z_max" value = "1" type = "double"/>     
@@ -44,6 +44,12 @@
 
     <!-- Robot safe starting orientation ro_min limit -->
     <param name = "robot_ro_min" value = "-3.141" type = "double"/>            
+
+    <!--_________________________________________________________ -->
+    <!-- This is the distorition safety limit.                    -->
+    <!--_________________________________________________________ -->
+    <param name = "dist_limit" value = "25" type = "int"/>  
+
 
 
 </launch>

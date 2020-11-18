@@ -17,7 +17,8 @@
 
 
 double x,y,z,az,el,ro;
-void viper_broadcaster_pose_ori_callback(const Polhemus_Viper_ROS_Driver::viper_msg_pose_ori  &msg)
+int kalman_sample_time;
+void outlier_detection_pose_ori_callback(const Polhemus_Viper_ROS_Driver::viper_msg_pose_ori  &msg)
 {
     x = msg.x;
     y = msg.y;
@@ -50,11 +51,14 @@ ros::init(argc, argv, "kalman_filter");
 
 ros::NodeHandle n;
 
-ros::Subscriber sub = n.subscribe("viper_broadcaster_pose_ori",10,viper_broadcaster_pose_ori_callback);
+ros::Subscriber sub = n.subscribe("outlier_detection_pose_ori",10,outlier_detection_pose_ori_callback);
 
 ros::Publisher kalman_filter_pose_ori= n.advertise<Polhemus_Viper_ROS_Driver::viper_msg_pose_ori>("kalman_filter_pose_ori", 1000);
 
-ros::Rate loop_rate(240);
+
+n.getParam("/viper_sample_time", kalman_sample_time);
+ros::Rate loop_rate(kalman_sample_time);
+
 
 Polhemus_Viper_ROS_Driver :: viper_msg_pose_ori msg_pose_ori;
 

@@ -212,6 +212,7 @@ include_directories(
 add_executable(Viper_broadcaster src/Viper_broadcaster.cpp)
 add_executable(kalman_filter src/kalman_filter.cpp)
 add_executable(path_generation src/path_generation.cpp)
+add_executable(outlier_detection src/outlier_detection.cpp)
 
 add_library(
 USBfcns
@@ -237,3 +238,4 @@ add_library(
 target_link_libraries(Viper_broadcaster ${catkin_LIBRARIES} USBfcns VNCP usb-1.0)
 target_link_libraries(kalman_filter ${catkin_LIBRARIES} Kalman)
 target_link_libraries(path_generation ${catkin_LIBRARIES})
+target_link_libraries(outlier_detection ${catkin_LIBRARIES})

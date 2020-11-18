@@ -20,11 +20,11 @@
 
 //Global variables
 double x,y,z,az,el,ro;
-int sample_number, dist,state = 1, init_run = 0;
+int dist,state = 1, init_run = 0;
 char input_string[20];
 
 // Variables for .launch files
-int sample_time;
+int sample_time, dist_limit;
 double sensor_x_max,sensor_x_min,sensor_y_max,sensor_y_min,sensor_z_max,sensor_z_min,sensor_az_max,sensor_az_min,sensor_el_max,sensor_el_min,sensor_ro_max,sensor_ro_min;
 double robot_x_max,robot_x_min,robot_y_max,robot_y_min,robot_z_max,robot_z_min,robot_az_max,robot_az_min,robot_el_max,robot_el_min,robot_ro_max,robot_ro_min;
 
@@ -48,11 +48,7 @@ void kalman_filter_pose_ori_callback(const Polhemus_Viper_ROS_Driver::viper_msg_
     el = msg.el;
     ro = msg.ro;
 }
-// Callback function for viper_broadcaster_n_sub
-void viper_broadcaster_n_callback(const Polhemus_Viper_ROS_Driver::viper_msg_n  &msg)
-{
-   sample_number = msg.n;
-}
+
 
 // Callback function for viper_broadcaster_dist_sub
 void viper_broadcaster_dist_callback(const Polhemus_Viper_ROS_Driver::viper_msg_dist  &msg)
@@ -70,8 +66,6 @@ int main(int argc, char **argv)
 	ros::NodeHandle n;
 	// Get filtered position and orientation from the kalman filter.
 	ros::Subscriber kalman_filter_pose_ori_sub = n.subscribe("kalman_filter_pose_ori",10,kalman_filter_pose_ori_callback);
-	// Get the sample number from the viper.
-	ros::Subscriber viper_broadcaster_n_sub = n.subscribe("viper_broadcaster_n",10,viper_broadcaster_n_callback);
 	// Get distortion level from the viper
 	ros::Subscriber viper_broadcaster_dist_sub = n.subscribe("viper_broadcaster_dist",10,viper_broadcaster_dist_callback);
 	// Publisher for movel to UR
@@ -103,7 +97,7 @@ int main(int argc, char **argv)
 	n.getParam("/robot_el_min", robot_el_min);
 	n.getParam("/robot_ro_max", robot_ro_max);
 	n.getParam("/robot_ro_min", robot_ro_min);
-
+	n.getParam("/dist_limit", dist_limit);
 	// Set ROS loop_rate
 	
 	ros::Rate loop_rate(sample_time);
@@ -194,35 +188,38 @@ int main(int argc, char **argv)
 			init_run = 1;
 		}
 		
-		ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",x,y,z,az,el,ro);
-		ROS_INFO("x_min = %f, x_max = %f",sensor_x_min, robot_x_max);
+		//ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",x,y,z,az,el,ro);
 		if(x > robot_x_min && x < robot_x_max){
 			if(y > robot_y_min && y < robot_y_max){
 				if(z > robot_z_min && z < robot_z_max){
 					if(az > robot_az_min && az < robot_az_max){
 						if(el > robot_el_min && el < robot_el_max){
 							if(ro > robot_ro_min && ro < robot_ro_max){
-								ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az <<"]), t=0.08, lookahead_time=0.001, gain=100)";
-								msg.data = ss.str();
-								ur_script_pub.publish(msg);
-								ROS_INFO("Within limits, sending command");
+								if(dist < dist_limit){
+									ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az <<"]), t=0.08, lookahead_time=0.001, gain=100)";
+									msg.data = ss.str();
+									ur_script_pub.publish(msg);
+									//ROS_INFO("Within limits, sending command");
+								}else{
+									//ROS_WARN("Robot stopped: Distorition limit");
+								}
 							}else{
-							ROS_WARN("Robot stopped: Ro limit.");
+								//ROS_WARN("Robot stopped: Ro limit.");
 							}
 						}else{
-							ROS_WARN("Robot stopped: El limit.");
+							//ROS_WARN("Robot stopped: El limit.");
 						}
 					}else{
-						ROS_WARN("Robot stopped: Az limit.");
+						//ROS_WARN("Robot stopped: Az limit.");
 					}
 				}else{
-					ROS_WARN("Robot stopped: Z limit.");
+					//ROS_WARN("Robot stopped: Z limit.");
 				}
 			}else{
-				ROS_WARN("Robot stopped: Y limit.");
+				//ROS_WARN("Robot stopped: Y limit.");
 			}
 		}else{
-			ROS_WARN("Robot stopped: X limit.");
+			//ROS_WARN("Robot stopped: X limit.");
 		}
 		break;
 
