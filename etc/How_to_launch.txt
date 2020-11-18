@@ -4,7 +4,7 @@ Launch ur driver
 
 Launch viper_tf2_broadcaster
 
-    roslaunch viper_tf2_broadcaster viper_settings.launch 
+    roslaunch Polhemus_Viper_ROS_Driver viper_broadcaster.launch 
 
 Test coordinate 1
 

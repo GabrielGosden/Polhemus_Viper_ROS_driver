@@ -7,8 +7,10 @@
 /*																								   */
 /*-------------------------------------------------------------------------------------------------*/
 
+
 #include "ros/ros.h"
 #include "std_msgs/String.h"
+
 // Include the custom messages.
 #include <Polhemus_Viper_ROS_Driver/viper_msg_pose_ori.h>
 #include <Polhemus_Viper_ROS_Driver/viper_msg_n.h>
@@ -16,30 +18,35 @@
 
 
 
-/* Global variables*/
+//Global variables
 double x,y,z,az,el,ro;
-int sample_number, sample_time, dist,state = 1, init_run = 0;
+int sample_number, dist,state = 1, init_run = 0;
 char input_string[20];
+
+// Variables for .launch files
+int sample_time;
+double sensor_x_max,sensor_x_min,sensor_y_max,sensor_y_min,sensor_z_max,sensor_z_min,sensor_az_max,sensor_az_min,sensor_el_max,sensor_el_min,sensor_ro_max,sensor_ro_min;
+double robot_x_max,robot_x_min,robot_y_max,robot_y_min,robot_z_max,robot_z_min,robot_az_max,robot_az_min,robot_el_max,robot_el_min,robot_ro_max,robot_ro_min;
+
+
 
 // Test variables. Delete later
 double temp;
 
-
+// Define ROS publisher globally to avoid scope issues
 ros::Publisher ur_script_pub;
 
 
 // Callback function for kalman_filter_pose_ori_sub
 void kalman_filter_pose_ori_callback(const Polhemus_Viper_ROS_Driver::viper_msg_pose_ori  &msg)
-{
-    x = msg.x/100;
-    y = msg.y/100;
-    z = msg.z/100;
-    az = msg.az;
+{	
+	//Apply Rotation matrix directly (Rot(x,pi)*Rot(z,pi/2))
+    x = msg.y/100;
+    y = msg.x/100;
+    z = (msg.z/100)*(-1);
+    az = msg.az*(-1);
     el = msg.el;
     ro = msg.ro;
-
-	z = z*(-1);
-	az = az*(-1);
 }
 // Callback function for viper_broadcaster_n_sub
 void viper_broadcaster_n_callback(const Polhemus_Viper_ROS_Driver::viper_msg_n  &msg)
@@ -70,8 +77,35 @@ int main(int argc, char **argv)
 	// Publisher for movel to UR
 	//ros::Publisher ur_script_pub = n.advertise<std_msgs::String>("ur_hardware_interface/script_command",10);
 	
-	// Get ROS loop_rate
+	//Get params from launch files.
 	n.getParam("/path_sample_time", sample_time);
+	n.getParam("/sensor_x_max", sensor_x_max);
+	n.getParam("/sensor_x_min", sensor_x_min);
+	n.getParam("/sensor_y_max", sensor_y_max);
+	n.getParam("/sensor_y_min", sensor_y_min);
+	n.getParam("/sensor_z_max", sensor_z_max);
+	n.getParam("/sensor_z_min", sensor_z_min);
+	n.getParam("/sensor_az_max", sensor_az_max);
+	n.getParam("/sensor_az_min", sensor_az_min);
+	n.getParam("/sensor_el_max", sensor_el_max);
+	n.getParam("/sensor_el_min", sensor_el_min);
+	n.getParam("/sensor_ro_max", sensor_ro_max);
+	n.getParam("/sensor_ro_min", sensor_ro_min);
+	n.getParam("/robot_x_max", robot_x_max);
+	n.getParam("/robot_x_min", robot_x_min);
+	n.getParam("/robot_y_max", robot_y_max);
+	n.getParam("/robot_y_min", robot_y_min);
+	n.getParam("/robot_z_max", robot_z_max);
+	n.getParam("/robot_z_min", robot_z_min);
+	n.getParam("/robot_az_max", robot_az_max);
+	n.getParam("/robot_az_min", robot_az_min);
+	n.getParam("/robot_el_max", robot_el_max);
+	n.getParam("/robot_el_min", robot_el_min);
+	n.getParam("/robot_ro_max", robot_ro_max);
+	n.getParam("/robot_ro_min", robot_ro_min);
+
+	// Set ROS loop_rate
+	
 	ros::Rate loop_rate(sample_time);
 
 
@@ -107,27 +141,43 @@ int main(int argc, char **argv)
 		case 2:
 			ROS_INFO("Confirm robot is at starting position by pressing 'Enter'.");
 			fgets(input_string,100,stdin);
-			state=3;
+			//state=3;
+			state=4;
 		break;
 		
 		// Move sensor to safe starting position.
-		case 3: 
+		case 3:
+			ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",x,y,z,az,el,ro);
+			 
 			ROS_INFO("Please move Viper sensor to the safe starting position and orientation");
-			if(x > 0.5 && x < 0.55){
-				if(y > -0.40 && y < 0.40){
-					if(z > -0.40 && z < 0.40){
-							ROS_INFO("Sensor is in safe starting position.");
-							state = 4;
+			if(x > sensor_x_min && x < sensor_x_max){
+				if(y > sensor_y_min && y < sensor_y_max){
+					if(z > sensor_y_min && z < sensor_y_max){
+						if(az > sensor_az_min && az < sensor_az_max){
+							if(el > sensor_el_min && el < sensor_el_max){
+								if(ro > sensor_ro_min && ro < sensor_ro_max){
+									ROS_INFO("Sensor is in safe starting position.");
+									state = 4;
+								}else{
+									ROS_INFO("Sensor Ro limit.");
+								}
+							}else{
+								ROS_INFO("Sensor El limit.");
+							}
+						}else{
+							ROS_INFO("Sensor Az limit.");
+						}
 					}else{
 						ROS_INFO("Sensor Z limit.");
 					}
 				}else{
-					ROS_INFO("Sensor X limit.");
+					ROS_INFO("Sensor Y limit.");
 				}
 			}else{
-				ROS_INFO("Sensor Y limit.");
+				ROS_INFO("Sensor X limit.");
 			}
 		break;
+
 		// Confirm by user to start robot movement.
 		case 4:
 			ROS_INFO("To start robot movement press 'Enter'");
@@ -137,28 +187,42 @@ int main(int argc, char **argv)
 
 		// Running the robot.
 		case 5:
+		// Create UR script command publisher.
 		if (init_run = 0){
 			ur_script_pub = n.advertise<std_msgs::String>("ur_hardware_interface/script_command",10);
 			ros::Duration(0.5).sleep();
 			init_run = 1;
 		}
 		
-		if(x > 0 && x < 1.00){
-			if(y > -0.40 && y < 0.40){
-				if(z > -0.40 && z < 0.40){
-						ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",y,x,z,az,el,ro);
-						ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az <<"]), t=0.08, lookahead_time=0.001, gain=100)";
-						msg.data = ss.str();
-						ur_script_pub.publish(msg);
-						//ROS_INFO("Within limits, sending command");
+		ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",x,y,z,az,el,ro);
+		ROS_INFO("x_min = %f, x_max = %f",sensor_x_min, robot_x_max);
+		if(x > robot_x_min && x < robot_x_max){
+			if(y > robot_y_min && y < robot_y_max){
+				if(z > robot_z_min && z < robot_z_max){
+					if(az > robot_az_min && az < robot_az_max){
+						if(el > robot_el_min && el < robot_el_max){
+							if(ro > robot_ro_min && ro < robot_ro_max){
+								ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az <<"]), t=0.08, lookahead_time=0.001, gain=100)";
+								msg.data = ss.str();
+								ur_script_pub.publish(msg);
+								ROS_INFO("Within limits, sending command");
+							}else{
+							ROS_WARN("Robot stopped: Ro limit.");
+							}
+						}else{
+							ROS_WARN("Robot stopped: El limit.");
+						}
+					}else{
+						ROS_WARN("Robot stopped: Az limit.");
+					}
 				}else{
 					ROS_WARN("Robot stopped: Z limit.");
 				}
 			}else{
-				ROS_WARN("Robot stopped: X limit.");
+				ROS_WARN("Robot stopped: Y limit.");
 			}
 		}else{
-			ROS_WARN("Robot stopped: Y limit.");
+			ROS_WARN("Robot stopped: X limit.");
 		}
 		break;
 
