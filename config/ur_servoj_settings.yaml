@@ -1,0 +1,12 @@
+
+
+# This .yaml file configures the parameters for the UR servoj commands used to move the robot.
+
+# Time where the commands is controlling the robot
+ur_time : 0.08 
+
+# Range (0.03-0.2). Smoothens the trajectory with this lookahead time
+ur_lookahead_time : 0.001
+
+# Range (100-2000) Proportional gain for following target position.
+ur_gain: 100

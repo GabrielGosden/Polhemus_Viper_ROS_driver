@@ -27,7 +27,7 @@ char input_string[20];
 int sample_time, dist_limit;
 double sensor_x_max,sensor_x_min,sensor_y_max,sensor_y_min,sensor_z_max,sensor_z_min,sensor_az_max,sensor_az_min,sensor_el_max,sensor_el_min,sensor_ro_max,sensor_ro_min;
 double robot_x_max,robot_x_min,robot_y_max,robot_y_min,robot_z_max,robot_z_min,robot_az_max,robot_az_min,robot_el_max,robot_el_min,robot_ro_max,robot_ro_min;
-
+double ur_gain, ur_time, ur_lookahead_time;
 
 
 // Test variables. Delete later
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 	// Publisher for movel to UR
 	//ros::Publisher ur_script_pub = n.advertise<std_msgs::String>("ur_hardware_interface/script_command",10);
 	
-	//Get params from launch files.
+	//Get params from .yaml files.
 	n.getParam("/path_sample_time", sample_time);
 	n.getParam("/sensor_x_max", sensor_x_max);
 	n.getParam("/sensor_x_min", sensor_x_min);
@@ -98,6 +98,11 @@ int main(int argc, char **argv)
 	n.getParam("/robot_ro_max", robot_ro_max);
 	n.getParam("/robot_ro_min", robot_ro_min);
 	n.getParam("/dist_limit", dist_limit);
+	n.getParam("/ur_time", ur_time);
+	n.getParam("/ur_lookahead_time", ur_lookahead_time);
+	n.getParam("/ur_gain", ur_gain);
+
+
 	// Set ROS loop_rate
 	
 	ros::Rate loop_rate(sample_time);
@@ -188,7 +193,7 @@ int main(int argc, char **argv)
 			init_run = 1;
 		}
 		
-		//ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",x,y,z,az,el,ro);
+		ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",x,y,z,az,el,ro);
 		if(x > robot_x_min && x < robot_x_max){
 			if(y > robot_y_min && y < robot_y_max){
 				if(z > robot_z_min && z < robot_z_max){
@@ -196,30 +201,30 @@ int main(int argc, char **argv)
 						if(el > robot_el_min && el < robot_el_max){
 							if(ro > robot_ro_min && ro < robot_ro_max){
 								if(dist < dist_limit){
-									ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az <<"]), t=0.08, lookahead_time=0.001, gain=100)";
+									ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az << "]), t=" << ur_time << ", lookahead_time=" << ur_lookahead_time << ", gain=" << ur_gain << ")";
 									msg.data = ss.str();
 									ur_script_pub.publish(msg);
-									//ROS_INFO("Within limits, sending command");
+									ROS_INFO("Within limits, sending command");
 								}else{
-									//ROS_WARN("Robot stopped: Distorition limit");
+									ROS_WARN("Robot stopped: Distorition limit");
 								}
 							}else{
-								//ROS_WARN("Robot stopped: Ro limit.");
+								ROS_WARN("Robot stopped: Ro limit.");
 							}
 						}else{
-							//ROS_WARN("Robot stopped: El limit.");
+							ROS_WARN("Robot stopped: El limit.");
 						}
 					}else{
-						//ROS_WARN("Robot stopped: Az limit.");
+						ROS_WARN("Robot stopped: Az limit.");
 					}
 				}else{
-					//ROS_WARN("Robot stopped: Z limit.");
+					ROS_WARN("Robot stopped: Z limit.");
 				}
 			}else{
-				//ROS_WARN("Robot stopped: Y limit.");
+				ROS_WARN("Robot stopped: Y limit.");
 			}
 		}else{
-			//ROS_WARN("Robot stopped: X limit.");
+			ROS_WARN("Robot stopped: X limit.");
 		}
 		break;
 

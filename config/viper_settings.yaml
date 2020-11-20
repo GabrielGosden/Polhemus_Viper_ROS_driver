@@ -33,7 +33,7 @@ ftt_mode : 1                       # FTT stationary Source Mode
 # These two settings must result in modulus 0 when divided. #
 
 # Set ROS Viper sample time #
-viper_sample_time : 20               
+viper_sample_time : 240               
 
 # Set path generation sample time #
-path_sample_time : 4                      
+path_sample_time : 40                      
