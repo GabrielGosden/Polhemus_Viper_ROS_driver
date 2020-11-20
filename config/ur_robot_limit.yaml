@@ -1,0 +1,54 @@
+ 
+#________________________________________________________ #
+#These are in relation to the robot base frame in meters  #
+#________________________________________________________ #
+
+#Sensor safe starting position x_max limit
+robot_x_max" : 0.5    
+    
+#Robot safe starting position x_min limit
+robot_x_min" : -0.5                     
+
+#Robot safe starting position y_max limit
+robot_y_max" : 1.5    
+    
+#Robot safe starting position y_min limit
+robot_y_min" : 0      
+
+#Robot safe starting position z_max limit
+robot_z_max" : 1    
+    
+#Robot safe starting position z_min limit
+robot_z_min" : 0                     
+    
+
+
+# ________________________________________________________ #
+# These are in relation to the robot base frame in radians #
+# ________________________________________________________ #
+
+
+#Robot safe starting orientation az_max limit
+robot_az_max" : 3.141   
+
+  #Robot safe starting orientation az_min limit
+robot_az_min" : -3.141      
+
+#Robot safe starting orientation el_max limit
+robot_el_max" : 3.141   
+
+#Robot safe starting orientation el_min limit
+robot_el_min" : -3.141 
+
+#Robot safe starting orientation ro_max limit
+robot_ro_max" : 3.141   
+
+#Robot safe starting orientation ro_min limit
+robot_ro_min" : -3.141           
+
+
+# ________________________________________________________ #
+# This is the distorition safety limit.                    #
+# ________________________________________________________ #
+
+dist_limit" : 5

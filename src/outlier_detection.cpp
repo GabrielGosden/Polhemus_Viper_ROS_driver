@@ -35,7 +35,7 @@ float calculateSD(float data[],int data_size)
     for(i = 0; i < data_size; ++i)
     {
         sum += data[i];
-        ROS_INFO("partial sum is %f", data[i]);
+        //ROS_INFO("partial sum is %f", data[i]);
     }
     //ROS_INFO("End sum");
     mean = sum/data_size;
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
             std_az = calculateSD(data_az,data_size);
             std_el = calculateSD(data_el,data_size);
             std_ro = calculateSD(data_ro,data_size);*/
-            ROS_INFO("std_x = %f", std_x);
+            //ROS_INFO("std_x = %f", std_x);
             //ROS_INFO("std_x = %f, std_y = %f, std_z = %f, std_az = %f, std_el = %f, std_ro = %f",std_x,std_y,std_z,std_az,std_el,std_ro);
 
             sample_number_old= sample_number;

@@ -1,8 +1,8 @@
 <launch>
-    <include file ="$(find Polhemus_Viper_ROS_Driver)/launch/viper_sensor_startup_limit.launch" />
-    <include file ="$(find Polhemus_Viper_ROS_Driver)/launch/viper_settings.launch" />
-    <include file ="$(find Polhemus_Viper_ROS_Driver)/launch/ur_robot_limit.launch" />
 
+    <rosparam command ="load" file="$(find Polhemus_Viper_ROS_Driver)/config/viper_sensor_startup_limit.yaml"/>
+    <rosparam command ="load" file="$(find Polhemus_Viper_ROS_Driver)/config/viper_settings.yaml"/>
+    <rosparam command ="load" file="$(find Polhemus_Viper_ROS_Driver)/config/ur_robot_limit.yaml"/>
 
 
     <node name = "viper_broadcaster" pkg = "Polhemus_Viper_ROS_Driver" type = "Viper_broadcaster" output = "screen"/>

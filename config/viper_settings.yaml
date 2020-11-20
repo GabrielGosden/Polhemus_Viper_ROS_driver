@@ -1,0 +1,39 @@
+
+
+# Set hemisphere parameters (This is positive x)
+x_hs : 1 
+y_hs : 0 
+z_hs : 0 
+
+# Set position units
+#pos_unit : 0                      # Inches                      
+#pos_unit : 1                      # Foot                        
+pos_unit : 2                       # Centimeters                 
+#pos_unit : 3                      # Meters                      
+# Set orientation un
+#ori_unit : 0                      # Euler angles in degrees     
+ori_unit : 1                       # Euler angles in radians     
+#ori_unit : 2                      # Quaternions                 
+# Set sensor fil
+#filter_level : 0                  # No filtering                
+#filter_level : 1                  # Traditional light filtering 
+#filter_level : 2                  # Traditional medium filtering
+#filter_level : 3                  # Traditional heavy filtering 
+#filter_level : 4                  # Traditional custom filtering
+#filter_level : 5                  # Enhanced light filtering    
+#filter_level : 6                  # Enhanced medium filtering   
+filter_level : 7                   # Enhanced heavy filtering    
+#filter_level : 8                  # Reserved                    
+# Set F
+#ftt_mode : 0                      # FTT disabled                         
+ftt_mode : 1                       # FTT stationary Source Mode   
+#ftt_mode : 2                      # FTT Moving Source Mode       
+
+
+# These two settings must result in modulus 0 when divided. #
+
+# Set ROS Viper sample time #
+viper_sample_time : 20               
+
+# Set path generation sample time #
+path_sample_time : 4                      
