@@ -70,7 +70,7 @@ ROS_INFO("Kalman filtering started!");
 
 while (ros::ok())
   {
-    msg_pose_ori.x = kalman_pose_x(x);
+  msg_pose_ori.x = kalman_pose_x(x);
 	msg_pose_ori.y = kalman_pose_y(y);
 	msg_pose_ori.z = kalman_pose_z(z);
 	msg_pose_ori.az = kalman_ori_az(az);

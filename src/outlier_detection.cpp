@@ -75,8 +75,13 @@ int main(int argc, char **argv)
 
     double std_x, std_y, std_z, std_az, std_el, std_ro;
     double x_min, x_max, x_avg, x_sum;
-    
-
+    double y_min, y_max, y_avg, y_sum;
+    double z_min, z_max, z_avg, z_sum;
+    double az_min, az_max, az_avg, az_sum;
+    double el_min, el_max, el_avg, el_sum;
+    double ro_min, ro_max, ro_avg, ro_sum;
+    int frame_good = 0, frame_bad = 0;
+    double drop_rate = 0;
     ros::Rate loop_rate(outlier_detection_sample_time);
 
 
@@ -87,100 +92,119 @@ int main(int argc, char **argv)
     {
         if (init == 0){
             sample_number_old=sample_number;
-            //float test[6] = {1,2,1,2,1,3};
-            //std_x = calculateSD(test,data_size);
-            //ROS_INFO("test = %f",std_x);
             init = 1;
-            //ROS_INFO("here1");
         }
         
         sample_number_current = sample_number;
-        /*
-        if(x > x_min && x < x_max){
-
-            ROS_INFO("Sample okay!");
-        }else{
-             ROS_INFO("Sample NOT okay!");
-        }
-
-        */
-
-       //ROS_INFO("x = %f", x);
-
+ 
         // Load data into array if array is not full.
         if(sample_number_current-sample_number_old <= data_size){
-            //ROS_INFO("putting into place %d",sample_number_current-sample_number_old-1);
             data_x[sample_number_current-sample_number_old-1] = x;
-            data_y[sample_number_current-sample_number_old] = y;
-            data_z[sample_number_current-sample_number_old] = z;
-            data_az[sample_number_current-sample_number_old] = az;
-            data_el[sample_number_current-sample_number_old] = el;
-            data_ro[sample_number_current-sample_number_old] = ro;
-            //ROS_INFO("Loaded into arrays");
+            data_y[sample_number_current-sample_number_old-1] = y;
+            data_z[sample_number_current-sample_number_old-1] = z;
+            data_az[sample_number_current-sample_number_old-1] = az;
+            data_el[sample_number_current-sample_number_old-1] = el;
+            data_ro[sample_number_current-sample_number_old-1] = ro;
         }
        
         // Everytime array is full.
         if (sample_number_current-sample_number_old > data_size-1){
             for(int i = 0;i < data_size; i++){
-                if(i == 0)
-                x_sum = 0;
-                x_sum = x_sum+data_x[i];
-            }
-            x_avg = x_sum/data_size;
-            if(x_avg > x_min && x_avg < x_max){
-                       ROS_INFO("Sample okay!"); 
-                    }else{
-                       ROS_INFO("Sample NOT okay!"); 
-                    }
-            //ROS_INFO("%f",x_avg);
-
-            /*
-            for(int i = 0;i < data_size; i++){
-                x_sum = x_sum+x;
-                //ROS_INFO("i = %d",i);
-                if(i==data_size-1){
-                    x_avg=x_sum/data_size;
-                    ROS_INFO("here!");
-                    if(x_avg > x_min && x_avg < x_max){
-                       ROS_INFO("Sample okay!"); 
-                    }else{
-                        ROS_INFO("x_avg = %f",x_avg);
-                        x_avg = 0;
-                       ROS_INFO("Sample NOT okay!"); 
-                    }
+                if( i== 0){
+                    x_sum = 0;
+                    y_sum = 0;
+                    z_sum = 0;
+                    az_sum = 0;
+                    el_sum = 0;
+                    ro_sum = 0;
                 }
+                x_sum = x_sum+data_x[i];
+                y_sum = y_sum+data_y[i];
+                z_sum = z_sum+data_z[i];
+                az_sum = az_sum+data_az[i];
+                el_sum = el_sum+data_el[i];
+                ro_sum = ro_sum+data_ro[i];
             }
-            */
             
-            std_x = calculateSD(data_x,data_size);
-            std_y = calculateSD(data_y,data_size);
-            std_z = calculateSD(data_z,data_size);
-            std_az = calculateSD(data_az,data_size);
-            std_el = calculateSD(data_el,data_size);
-            std_ro = calculateSD(data_ro,data_size);
-            x_min = x - 3*std_x;
-            x_max = x + 3*std_x;
-            ROS_INFO("x_min = %f , x_max = %f",x_min, x_max);
-            //ROS_INFO("std_x = %f, std_y = %f, std_z = %f, std_az = %f, std_el = %f, std_ro = %f",std_x,std_y,std_z,std_az,std_el,std_ro);
-           
-            // After calculation update sample number
-            sample_number_old= sample_number;
+            
+            //ROS_INFO("az_sum = %f", az_sum); 
+            x_avg = x_sum/data_size;
+            y_avg = y_sum/data_size;
+            z_avg = z_sum/data_size;
+
+            az_avg = az_sum/data_size;
+            el_avg = el_sum/data_size;
+            ro_avg = ro_sum/data_size;
+            if(x_avg > x_min && x_avg < x_max){
+                if(y_avg > y_min && y_avg < y_max){
+                    if(z_avg > z_min && z_avg < z_max){
+                        if(az_avg > az_min && az_avg < az_max){
+                            if(el_avg > el_min && el_avg < el_max){
+                                if(ro_avg > ro_min && ro_avg < ro_max){
+                                    frame_good++;
+                                    drop_rate = (float)frame_bad/((float)frame_good+(float)frame_bad);
+                                    msg_pose_ori.x = x_avg;
+	                                msg_pose_ori.y = y_avg;
+	                                msg_pose_ori.z = z_avg;
+	                                msg_pose_ori.az = az_avg;
+	                                msg_pose_ori.el = el_avg;
+	                                msg_pose_ori.ro = ro_avg;
+                                    outlier_detection_pose_ori.publish(msg_pose_ori);
+                                    ROS_INFO("Sample okay! Drop rate is :%f percent",drop_rate*100); 
+                                }else{
+                                    frame_bad++;
+                                    ROS_INFO("Sample ro NOT okay! %d",frame_bad);
+                                }
+                            }else{
+                                frame_bad++;
+                                ROS_INFO("Sample el NOT okay! %d",frame_bad);
+                            }
+                        }else{
+                            frame_bad++;
+                            ROS_INFO("Sample az NOT okay! %d",frame_bad);
+                        }
+
+                    }else{
+                        frame_bad++;
+                        ROS_INFO("Sample z NOT okay! %d",frame_bad);
+                    }
+                }else{
+                    frame_bad++;
+                    ROS_INFO("Sample y NOT okay! %d",frame_bad);
+                }
+            }else{
+                frame_bad++;
+                ROS_INFO("Sample x NOT okay! %d",frame_bad);
+            }
+
+        // Calculate standard deviation    
+        std_x = calculateSD(data_x,data_size);
+        std_y = calculateSD(data_y,data_size);
+        std_z = calculateSD(data_z,data_size);
+        std_az = calculateSD(data_az,data_size);
+        std_el = calculateSD(data_el,data_size);
+        std_ro = calculateSD(data_ro,data_size);
+        x_min = x - 9*std_x;
+        x_max = x + 9*std_x;
+        y_min = y - 9*std_y;
+        y_max = y + 9*std_y;
+        z_min = z - 9*std_z;
+        z_max = z + 9*std_z;
+        az_min = az - 9*std_az;
+        az_max = az + 9*std_az;
+        el_min = el - 9*std_el;
+        el_max = el + 9*std_el;
+        ro_min = ro - 9*std_ro;
+        ro_max = ro + 9*std_ro;
+        //ROS_INFO("x_min = %f , x_max = %f",x_min, x_max);
+         
+        // After calculation update sample number
+        sample_number_old= sample_number;
 
 
   
 
         }
-
-        /*
-
-        msg_pose_ori.x = x;
-        msg_pose_ori.y = y;
-        msg_pose_ori.z = z;
-        msg_pose_ori.az = az;
-        msg_pose_ori.el = el;
-        msg_pose_ori.ro = ro;
-        outlier_detection_pose_ori.publish(msg_pose_ori);
-*/
     
         ros::spinOnce();
 
