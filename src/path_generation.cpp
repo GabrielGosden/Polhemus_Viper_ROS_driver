@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 	n.getParam("/ur_time", ur_time);
 	n.getParam("/ur_lookahead_time", ur_lookahead_time);
 	n.getParam("/ur_gain", ur_gain);
-
+	
 
 	// Set ROS loop_rate
 	
@@ -140,8 +140,8 @@ int main(int argc, char **argv)
 		case 2:
 			ROS_INFO("Confirm robot is at starting position by pressing 'Enter'.");
 			fgets(input_string,100,stdin);
-			//state=3;
-			state=4;
+			state=3;
+			//state=4;
 		break;
 		
 		// Move sensor to safe starting position.
@@ -186,6 +186,7 @@ int main(int argc, char **argv)
 
 		// Running the robot.
 		case 5:
+
 		// Create UR script command publisher.
 		if (init_run = 0){
 			ur_script_pub = n.advertise<std_msgs::String>("ur_hardware_interface/script_command",10);
@@ -193,7 +194,8 @@ int main(int argc, char **argv)
 			init_run = 1;
 		}
 		
-		ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",x,y,z,az,el,ro);
+		//ROS_INFO("x = %f, y = %f, z = %f, az = %f, el = %f, ro = %f",x,y,z,az,el,ro);
+		//ROS_INFO("robot_x_min = %f, robot_x_max = %f",robot_x_min,robot_x_max);
 		if(x > robot_x_min && x < robot_x_max){
 			if(y > robot_y_min && y < robot_y_max){
 				if(z > robot_z_min && z < robot_z_max){
