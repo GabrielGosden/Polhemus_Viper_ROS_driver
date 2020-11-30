@@ -28,7 +28,7 @@ void viper_broadcaster_n_callback(const Polhemus_Viper_ROS_Driver::viper_msg_n  
 
 float calculateSD(float data[],int data_size)
 {
-    float sum = 0.0, mean, standardDeviation = 0.0;
+    float sum = 0.0, mean = 0.0, standardDeviation = 0.0;
     int i;
     for(i = 0; i < data_size; ++i)
     {
@@ -42,6 +42,17 @@ float calculateSD(float data[],int data_size)
     return sqrt(standardDeviation / data_size);
 }
 
+float calculateMean(float data[],int data_size){
+    float sum = 0.0, mean = 0.0;
+    int i;
+    for(i = 0; i < data_size; ++i)
+    {
+        sum += data[i];
+    }
+    mean = sum/data_size;
+
+    return mean;
+}
 
 
 int main(int argc, char **argv)
@@ -71,15 +82,8 @@ int main(int argc, char **argv)
     data_size = outlier_detection_sample_time/path_generation_sample_time;
     
     float data_x[data_size], data_y[data_size], data_z[data_size], data_az[data_size], data_el[data_size], data_ro[data_size];
-    double std_x, std_y, std_z, std_az, std_el, std_ro;
-    double x_min, x_max, x_avg, x_sum;
-    double y_min, y_max, y_avg, y_sum;
-    double z_min, z_max, z_avg, z_sum;
-    double az_min, az_max, az_avg, az_sum;
-    double el_min, el_max, el_avg, el_sum;
-    double ro_min, ro_max, ro_avg, ro_sum;
-    int frame_good = 0, frame_bad = 0;
-    double drop_rate = 0;
+    float std[6], mean[6], out_n[6], out[6];
+
     ros::Rate loop_rate(outlier_detection_sample_time);
 
 
@@ -102,8 +106,6 @@ int main(int argc, char **argv)
         }else{
             sample_number_current = sample_number;
         }
-        
-      
  
         // Load data into array if array is not full.
         if(sample_number_current-sample_number_old <= data_size){
@@ -117,100 +119,70 @@ int main(int argc, char **argv)
        
         // Everytime array is full.
         if (sample_number_current-sample_number_old > data_size-1){
-            for(int i = 0;i < data_size; i++){
-                if( i== 0){
-                    x_sum = 0;
-                    y_sum = 0;
-                    z_sum = 0;
-                    az_sum = 0;
-                    el_sum = 0;
-                    ro_sum = 0;
+
+        // Reset output and output index
+        for(int j = 0; j < data_size; j++){
+        out[j] = 0;
+        out_n[j] = 0;
+        }
+
+        // Calculate standard deviation for whole array 
+        std[0] = calculateSD(data_x,data_size);
+        std[1] = calculateSD(data_y,data_size);
+        std[2] = calculateSD(data_z,data_size);
+        std[3] = calculateSD(data_az,data_size);
+        std[4] = calculateSD(data_el,data_size);
+        std[5] = calculateSD(data_ro,data_size);
+
+        // Calculate mean for whole array
+        mean[0] = calculateMean(data_x, data_size);
+        mean[1] = calculateMean(data_y, data_size);
+        mean[2] = calculateMean(data_z, data_size);
+        mean[3] = calculateMean(data_az, data_size);
+        mean[4] = calculateMean(data_el, data_size);
+        mean[5] = calculateMean(data_ro, data_size);   
+
+        // Compare max and min to every sample in array
+            for(int i = 0; i < data_size; i++){
+                if(data_x[i] > mean[0] - 3*std[0] && data_x[i] < mean[0] + 3*std[0]){
+                    out[0] += data_x[i];
+                    out_n[0]++;
+                }  
+                if(data_y[i] > mean[1] - 3*std[1] && data_y[i] < mean[1] + 3*std[1]){
+                    out[1] += data_y[i];
+                    out_n[1]++;
                 }
-                x_sum = x_sum+data_x[i];
-                y_sum = y_sum+data_y[i];
-                z_sum = z_sum+data_z[i];
-                az_sum = az_sum+data_az[i];
-                el_sum = el_sum+data_el[i];
-                ro_sum = ro_sum+data_ro[i];
-            }
-            
-            x_avg = x_sum/data_size;
-            y_avg = y_sum/data_size;
-            z_avg = z_sum/data_size;
-
-            az_avg = az_sum/data_size;
-            el_avg = el_sum/data_size;
-            ro_avg = ro_sum/data_size;
-
-            if(x_avg > x_min && x_avg < x_max){
-                if(y_avg > y_min && y_avg < y_max){
-                    if(z_avg > z_min && z_avg < z_max){
-                        if(az_avg > az_min && az_avg < az_max){
-                            if(el_avg > el_min && el_avg < el_max){
-                                if(ro_avg > ro_min && ro_avg < ro_max){
-                                    frame_good++;
-                                    drop_rate = (float)frame_bad/((float)frame_good+(float)frame_bad);
-                                    msg_pose_ori.x = x_avg;
-	                                msg_pose_ori.y = y_avg;
-	                                msg_pose_ori.z = z_avg;
-	                                msg_pose_ori.az = az_avg;
-	                                msg_pose_ori.el = el_avg;
-	                                msg_pose_ori.ro = ro_avg;
-                                    outlier_detection_pose_ori.publish(msg_pose_ori);
-                                    //ROS_INFO("Sample okay! Drop rate is :%f percent",drop_rate*100); 
-                                }else{
-                                    frame_bad++;
-                                    //ROS_INFO("Sample ro NOT okay! %d",frame_bad);
-                                }
-                            }else{
-                                frame_bad++;
-                                //ROS_INFO("Sample el NOT okay! %d",frame_bad);
-                            }
-                        }else{
-                            frame_bad++;
-                            //ROS_INFO("Sample az NOT okay! %d",frame_bad);
-                        }
-
-                    }else{
-                        frame_bad++;
-                        //ROS_INFO("Sample z NOT okay! %d",frame_bad);
-                    }
-                }else{
-                    frame_bad++;
-                    //ROS_INFO("Sample y NOT okay! %d",frame_bad);
+                if(data_z[i] > mean[2] - 3*std[2] && data_z[i] < mean[2] + 3*std[2]){
+                    out[2] += data_z[i];
+                    out_n[2]++;
                 }
-            }else{
-                frame_bad++;
-                //ROS_INFO("Sample x NOT okay! %d",frame_bad);
+                if(data_az[i] > mean[3] - 3*std[3] && data_az[i] < mean[3] + 3*std[3]){
+                    out[3] += data_az[i];
+                    out_n[3]++;
+                }
+                if(data_el[i] > mean[4] - 3*std[4] && data_el[i] < mean[4] + 3*std[4]){
+                    out[4] += data_el[i];
+                    out_n[4]++;
+                }
+                if(data_ro[i] > mean[5] - 3*std[5] && data_ro[i] < mean[5] + 3*std[5]){
+                    out[5] += data_ro[i];
+                    out_n[5]++;
+                }
+                
             }
-
-        //ROS_INFO("%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f ",x_min, x_max, x_avg, y_min, y_max, y_avg, z_min, z_max, z_avg,el_min, el_max, el_avg, az_min, az_max, az_avg, ro_min, ro_max, ro_avg);
+        // Incorporate skipped frames and create message    
+        msg_pose_ori.x = out[0]/out_n[0];
+	    msg_pose_ori.y = out[1]/out_n[1];
+	    msg_pose_ori.z = out[2]/out_n[2];
+	    msg_pose_ori.az = out[3]/out_n[3];
+	    msg_pose_ori.el = out[4]/out_n[4];
+	    msg_pose_ori.ro = out[5]/out_n[5];
         
-        // Calculate standard deviation    
-        std_x = calculateSD(data_x,data_size);
-        std_y = calculateSD(data_y,data_size);
-        std_z = calculateSD(data_z,data_size);
-        std_az = calculateSD(data_az,data_size);
-        std_el = calculateSD(data_el,data_size);
-        std_ro = calculateSD(data_ro,data_size);
-        x_min = x - 3*std_x;
-        x_max = x + 3*std_x;
-        y_min = y - 3*std_y;
-        y_max = y + 3*std_y;
-        z_min = z - 3*std_z;
-        z_max = z + 3*std_z;
-        az_min = az - 3*std_az;
-        az_max = az + 3*std_az;
-        el_min = el - 3*std_el;
-        el_max = el + 3*std_el;
-        ro_min = ro - 3*std_ro;
-        ro_max = ro + 3*std_ro;
-         
-        // After calculation update sample number
+        // Publish message
+        outlier_detection_pose_ori.publish(msg_pose_ori);
+
+        // Update sample number
         sample_number_old= sample_number;
-
-
-  
 
         }
     
