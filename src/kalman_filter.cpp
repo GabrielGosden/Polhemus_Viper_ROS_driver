@@ -28,7 +28,7 @@ void outlier_detection_pose_ori_callback(const Polhemus_Viper_ROS_Driver::viper_
     ro = msg.ro;
 }
 
-
+/*
 double kalman_pose_x(double U){
     static double R = 1;                                   // Noise covariance
     static double H = 1;                                   // Measurement map scalar
@@ -43,7 +43,7 @@ double kalman_pose_x(double U){
     
     return U_HAT;
 }
-
+*/
 int main(int argc, char **argv)
 {
 

@@ -1,6 +1,6 @@
 Launch ur driver
 
-    roslaunch ur_robot_driver ur10e_bringup.launch robot_ip:=192.168.56.2 kinematics_config:=$(rospack find viper_tf2_broadcaster)/etc/robot_calibration.yaml
+    roslaunch ur_robot_driver ur10e_bringup.launch robot_ip:=192.168.56.2 kinematics_config:=$(rospack find Polhemus_Viper_ROS_Driver)/etc/robot_calibration.yaml
 
 Launch viper_tf2_broadcaster
 

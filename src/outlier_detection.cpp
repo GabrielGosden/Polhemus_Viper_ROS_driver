@@ -9,6 +9,7 @@
 double x,y,z,az,el,ro;
 int sample_number, init;
 
+// Callback function for viper_broadcaster_pose_ori
 void viper_broadcaster_pose_ori_callback(const Polhemus_Viper_ROS_Driver::viper_msg_pose_ori  &msg)
 {
     x = msg.x;
@@ -25,7 +26,7 @@ void viper_broadcaster_n_callback(const Polhemus_Viper_ROS_Driver::viper_msg_n  
    sample_number = msg.n;
 }
 
-
+// Function to calculate Standard Deviation
 float calculateSD(float data[],int data_size)
 {
     float sum = 0.0, mean = 0.0, standardDeviation = 0.0;
@@ -42,6 +43,7 @@ float calculateSD(float data[],int data_size)
     return sqrt(standardDeviation / data_size);
 }
 
+// Function to calculate mean
 float calculateMean(float data[],int data_size){
     float sum = 0.0, mean = 0.0;
     int i;
@@ -80,8 +82,10 @@ int main(int argc, char **argv)
 
     // Create arrays according to sample speed.
     data_size = outlier_detection_sample_time/path_generation_sample_time;
-    
+
+    // Array for input data
     float data_x[data_size], data_y[data_size], data_z[data_size], data_az[data_size], data_el[data_size], data_ro[data_size];
+    // Arrays for calculation and output
     float std[6], mean[6], out_n[6], out[6];
 
     ros::Rate loop_rate(outlier_detection_sample_time);
