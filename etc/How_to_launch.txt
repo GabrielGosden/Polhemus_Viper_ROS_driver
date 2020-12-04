@@ -8,11 +8,23 @@ Launch viper_tf2_broadcaster
 
 Test coordinate 1
 
- rostopic pub /ur_hardware_interface/script_command std_msgs/String "data: 'movel(p[-0.217,0.553,0.496,3.72,-0.3,-0.12])'"
+    rostopic pub /ur_hardware_interface/script_command std_msgs/String "data: 'movel(p[-0.217,0.553,0.496,3.72,-0.3,-0.12])'"
 
 Test coordinate 2 
 
- rostopic pub /ur_hardware_interface/script_command std_msgs/String "data: 'movel(p[-0.217,0.553,0.596,3.72,-0.3,-0.12])'"
+    rostopic pub /ur_hardware_interface/script_command std_msgs/String "data: 'movel(p[-0.217,0.553,0.596,3.72,-0.3,-0.12])'"
+
+Launch ur10_cc
+
+    roslaunch ur10_cc_pub test.launch
+
+Get UR 10 e frames
+
+    rosrun tf tf_echo /base /tool0 5
+
+View tf 
+
+    rosrun tf view_frames 
 
 
 
