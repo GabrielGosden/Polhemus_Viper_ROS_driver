@@ -26,6 +26,7 @@ void outlier_detection_pose_ori_callback(const Polhemus_Viper_ROS_Driver::viper_
     az = msg.az;
     el = msg.el;
     ro = msg.ro;
+   // ROS_INFO("x=%f, y=%f, z=%f, az=%f, el=%f, ro=%f",x,y,z,az,el,ro);
 }
 
 /*
@@ -56,7 +57,7 @@ ros::Subscriber sub = n.subscribe("outlier_detection_pose_ori",10,outlier_detect
 ros::Publisher kalman_filter_pose_ori= n.advertise<Polhemus_Viper_ROS_Driver::viper_msg_pose_ori>("kalman_filter_pose_ori", 1000);
 
 
-n.getParam("/viper_sample_time", kalman_sample_time);
+n.getParam("/path_sample_time", kalman_sample_time);
 ros::Rate loop_rate(kalman_sample_time);
 
 
@@ -66,16 +67,27 @@ Polhemus_Viper_ROS_Driver :: viper_msg_pose_ori msg_pose_ori;
 
 double x_filtered, y_filtered, z_filtered, az_filtered,el_filtered,ro_filtered, init = 0;  
 
-ROS_INFO("Kalman filtering started!");
+ros::Duration(2.0).sleep();
+
+//ROS_INFO("Kalman filtering started!");
 
 while (ros::ok())
   {
+  msg_pose_ori.x = x;
+	msg_pose_ori.y = y;
+	msg_pose_ori.z = z;
+	msg_pose_ori.az = az;
+	msg_pose_ori.el = el;
+	msg_pose_ori.ro = ro;
+  /*
   msg_pose_ori.x = kalman_pose_x(x);
 	msg_pose_ori.y = kalman_pose_y(y);
 	msg_pose_ori.z = kalman_pose_z(z);
 	msg_pose_ori.az = kalman_ori_az(az);
 	msg_pose_ori.el = kalman_ori_el(el);
-	msg_pose_ori.ro = kalman_ori_ro(ro);
+	msg_pose_ori.ro = kalman_ori_ro(ro);*/
+  //ROS_INFO("x=%f, y=%f, z=%f, az=%f, el=%f, ro=%f",x,y,z,az,el,ro);
+  //ROS_INFO("message = x=%f, y=%f, z=%f, az=%f, el=%f, ro=%f",msg_pose_ori.x,msg_pose_ori.y,msg_pose_ori.z,msg_pose_ori.az,msg_pose_ori.el,msg_pose_ori.ro);
 	kalman_filter_pose_ori.publish(msg_pose_ori);
 
     if(init == 0 && msg_pose_ori.x != 0){

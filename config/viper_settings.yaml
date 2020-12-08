@@ -36,4 +36,4 @@ ftt_mode : 1                       # FTT stationary Source Mode
 viper_sample_time : 240               
 
 # Set path generation sample time #
-path_sample_time : 40                      
+path_sample_time : 80                      

@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 	// Set ROS loop_rate
 	
 	ros::Rate loop_rate(sample_time);
-
+	//ros::Rate loop_rate(80);
 
     while (ros::ok())
   {
@@ -133,6 +133,7 @@ int main(int argc, char **argv)
 			ss << "movej([-1.571,-1.571,1.571,-0.576,1.571,0],a=0.1,v=0.1)";
 			msg.data = ss.str();
 			ur_script_pub.publish(msg);
+			//ros::Duration(2.5).sleep();
 			ROS_INFO("Sending robot to starting position, please wait.");
 			state=2;
 
@@ -203,7 +204,8 @@ int main(int argc, char **argv)
 						if(el > robot_el_min && el < robot_el_max){
 							if(ro > robot_ro_min && ro < robot_ro_max){
 								if(dist < dist_limit){
-									ss << "servoj(get_inverse_kin(p[" << y << "," << x << "," << z << "," << el << "," << ro << "," << az << "]), t=" << ur_time << ", lookahead_time=" << ur_lookahead_time << ", gain=" << ur_gain << ")";
+									//ss << "servoj(get_inverse_kin(p[-0.217,0.553,0.496,3.72,-0.3,-0.12]), t=" << ur_time << ", lookahead_time=" << ur_lookahead_time << ", gain=" << ur_gain << ")";
+									ss << "servoj(get_inverse_kin(p[" << x << "," << y << "," << z << "," << el << "," << ro << "," << az << "]), t=" << ur_time << ", lookahead_time=" << ur_lookahead_time << ", gain=" << ur_gain << ")";
 									msg.data = ss.str();
 									ur_script_pub.publish(msg);
 									ROS_INFO("Within limits, sending command");

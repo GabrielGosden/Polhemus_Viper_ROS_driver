@@ -18,6 +18,7 @@ void viper_broadcaster_pose_ori_callback(const Polhemus_Viper_ROS_Driver::viper_
     az = msg.az;
     el = msg.el;
     ro = msg.ro;
+
 }
 
 // Callback function for viper_broadcaster_n_sub
@@ -89,7 +90,7 @@ int main(int argc, char **argv)
     float std[6], mean[6], out_n[6], out[6];
 
     ros::Rate loop_rate(outlier_detection_sample_time);
-
+    ROS_INFO("outlier_detection_sample_time= %d",outlier_detection_sample_time);
 
     Polhemus_Viper_ROS_Driver :: viper_msg_pose_ori msg_pose_ori;
 
@@ -187,6 +188,13 @@ int main(int argc, char **argv)
 
         // Update sample number
         sample_number_old= sample_number;
+        
+        // Reset values
+        for(int u = 0;u < 6;u++){
+            out[u]=0;
+            out_n[u]=0; 
+        }
+
 
         }
     
