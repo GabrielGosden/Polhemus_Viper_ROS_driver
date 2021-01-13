@@ -20,7 +20,6 @@ $ ./install_rules.bash
 Note that you will require the `sudo` password. 
 
 # How to change the Viper settings
-TODO: REWRITE THIS TO FIT NEW LAUNCH FILES
 
 Change Viper settings in the `config/viper_settings.yaml` file. The following settings are implemented to be changed using the launch file. 
 - Hemisphere
